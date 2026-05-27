@@ -1,0 +1,15 @@
+114  9.1217999999999995E+002 Motorola
+0 14 Gama alta
+carp
+123  9.9900000000000006E+001 Samsung
+0 23 Gama baja
+nose
+485  5.1000000000000000E+001 Nokia
+0 15 Gama baja
+dzja
+678  1.4990000000000000E+001 Apple
+0 8 Gama media
+celu
+679  9.9900000000000002E+000 LG
+0 15 Gama baja
+otro

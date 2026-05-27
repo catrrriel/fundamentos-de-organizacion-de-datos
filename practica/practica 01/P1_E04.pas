@@ -17,7 +17,7 @@ NOTA: Las búsquedas deben realizarse por número de empleado.
 program SistemaEmpleados;
 const
 	apellidoSalida='fin'; opcionSalida=0;
-	edadCorte=70;
+	edadCorte=70; dniCorte=0;
 type
 	string10=string[10];
 	empleado=record
@@ -50,7 +50,7 @@ begin
 	else
 		e.apellido:=randomString(5+random(5));
 	}
-	write('Ingrese apellido del empleado: ');
+	write('Ingrese apellido del empleado ("fin" para salir): ');
 	readln(e.apellido);	
 	if(e.apellido<>apellidoSalida)then begin
 		//e.nombre:=randomString(5+random(5));
@@ -62,7 +62,9 @@ begin
 		else
 			e.dni:=random(40000000)+10000000;
 		e.edad:=random(60)+20;
-		e.numEmp:=random(3000)+1000;
+		write('Ingrese numero de empleado: ');
+		//e.numEmp:=random(3000)+1000;
+		readln(e.numEmp);
 	end;
 end;
 	
@@ -137,14 +139,121 @@ end;
 
 procedure leerOpcion(var opcion:int8);
 begin
-	writeln('~~~~~~~~ MENU DE OPCIONES ~~~~~~~~');
+	writeln('~~~ MENU DE OPCIONES ~~~');
 	writeln();
 	writeln('Opcion 1: Crear y cargar archivo de empleados');
 	writeln('Opcion 2: Listar empleados filtrando por nombre o apellido');
 	writeln('Opcion 3: Listar todos los empleados');
 	writeln('Opcion 4: Listar empleados prontos a jubilarse');
+	writeln('Opcion 5: Agregar empleados al archivo');
+	writeln('Opcion 6: Modificar la edad de un empleado');
+	writeln('Opcion 7: Exportar datos a un archivo de texto');
+	writeln('Opcion 8: Exportar faltantes de DNI a un archivo de texto');
 	writeln('Opcion 0: Salir del menu');
 	write('Ingrese opcion: ');readln(opcion);
+	writeln();
+end;
+
+
+function controlUnicidad(var empleados:archivoEmpleados; num: integer):boolean;
+var 
+	encontre:boolean;
+	e:empleado;
+begin
+	encontre:=false;
+	seek(empleados,0);
+	while (not eof(empleados)) and (encontre=false)do begin
+		read(empleados,e);
+		if(e.numEmp=num)then
+			encontre:=true;
+	end;
+	controlUnicidad:=encontre;
+end;
+
+procedure agregarEmpleados(var empleados:archivoEmpleados);
+var
+	e:empleado;
+	cantEmpleados:integer;
+begin
+	cantEmpleados:=0;
+	reset(empleados);
+	writeln('======== Empleados a agregar ========');
+	leerEmpleado(e);
+	while(e.apellido<>apellidoSalida)do begin
+		if(controlUnicidad(empleados,e.numEmp)=false)then begin
+			seek(empleados,fileSize(empleados));
+			write(empleados, e);
+			cantEmpleados:=cantEmpleados+1;
+		end
+		else
+			writeln('Este numero de empleado ya existe en el archivo, ingrese otro empleado');
+		leerEmpleado(e);
+	end;
+	writeln('Nuevos empleados agregados al archivo: ',cantEmpleados);
+	close(empleados);
+end;
+
+procedure modificarEdad(var empleados:archivoEmpleados);
+var
+	num,edad:integer;
+	encontre:boolean;
+	e:empleado;
+begin
+	write('Ingrese numero de empleado a modificar edad: ');
+	readln(num);
+	encontre:=false;
+	reset(empleados);
+	while(not eof(empleados) and (encontre=false))do begin
+		read(empleados,e);
+		if(e.numEmp=num)then
+			encontre:=true;
+	end;
+	if(encontre)then begin
+		write('Ingrese edad a modificar: ');
+		readln(edad);
+		e.edad:=edad;
+		seek(empleados,filePos(empleados)-1);
+		write(empleados,e);
+		writeln('Edad modificada');
+	end
+	else
+		writeln('El empleado ',num,' no existe en el archivo');
+	close(empleados);
+end;
+
+procedure exportarArchivoTexto(var empleados:archivoEmpleados);
+var
+	archivoTexto:text;
+	e:empleado;
+begin
+	reset(empleados);
+	assign(archivoTexto,'E4_todos_empleados.txt');
+	rewrite(archivoTexto);
+	while(not eof(empleados))do begin
+		read(empleados,e);
+		writeln(archivoTexto,e.numEmp,' ',e.dni,' ',e.edad,' ',e.apellido,' ',e.nombre);
+	end;
+	close(empleados);
+	close(archivoTexto);
+	writeln('Se exporto correctamente la info a un archivo de texto');
+end;
+
+procedure exportarTextoFaltanteDNI(var empleados:archivoEmpleados);
+var
+	archivoTexto:text;
+	e:empleado;
+begin
+	reset(empleados);
+	assign(archivoTexto,'E4_faltaDNIEmpleado.txt');
+	rewrite(archivoTexto);
+	while(not eof(empleados))do begin
+		read(empleados,e);
+		if(e.dni=dniCorte)then
+			writeln(archivoTexto,e.numEmp,' ',e.dni,' ',e.edad,' ',e.apellido,' ',e.nombre);
+	end;
+	close(empleados);
+	close(archivoTexto);
+	writeln('Se exportaron correctamente los faltantes de DNI a un archivo de texto');
 end;
 
 procedure abrirMenu(var empleados:archivoEmpleados);
@@ -157,6 +266,10 @@ begin
 			2:listarEmpleadosPorNombre(empleados);
 			3:listarEmpleados(empleados);
 			4:listarEmpleadosAJubilar(empleados);
+			5:agregarEmpleados(empleados);
+			6:modificarEdad(empleados);
+			7:exportarArchivoTexto(empleados);
+			8:exportarTextoFaltanteDNI(empleados);
 		else
 			writeln('La opcion ingresada no corresponde a ninguna accion');
 		end;
@@ -165,39 +278,9 @@ begin
 	end;
 end;
 
-function controlUnicidad(var empleados:archivoEmpleados; num: integer):boolean;
-var 
-	encontre:boolean
-	e:empleado;
-begin
-	encontre:=false;
-	reset(empleados);
-	while (not eof(empleados)) and (encontre=false)do begin
-		read(empleados,e);
-		if(e.numEmp=num)then
-			encontre:=true;
-	end;
-	close(empleados);
-	controlUnicidad:=encontre;
-end;
-
-procedure agregarEmpleados(var empleados:archivoEmpleados);
-var
-	e:empleado;
-begin
-	reset(empleados);
-	writeln('======== Empleados a agregar ========');
-	leerEmpleado(e);
-	while(e.apellido<>apellidoSalida)do begin
-	
-	end;
-	
-end;
-
 //PP
 var 
 	empleados:archivoEmpleados;
-
 BEGIN
 	randomize;
 	assign(empleados,'E3_empleados');
