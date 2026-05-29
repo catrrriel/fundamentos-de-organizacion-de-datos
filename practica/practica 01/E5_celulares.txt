@@ -1,18 +1,54 @@
-594 41.00 Samsung
-13 5 Gama alta
-enkdya
-546 65.00 Apple
-18 11 Gama baja
-vhmkzu
-765 23.00 Samsung
-11 2 Gama media
-zdsugc
-517 44.00 LG
-17 8 Gama alta
-hagxkb
-993 26.00 Samsung
-17 5 Gama baja
-qnzdoe
-842 91.00 Samsung
-3 12 Gama baja
-hklbe
+393 29.00 Samsung
+4 4 Gama baja
+gzkcp
+702 9.00 Nokia
+4 2 Gama alta
+nrxk
+841 48.00 Apple
+8 14 Gama alta
+qxig
+930 4.00 LG
+0 10 Gama baja
+fhmz
+885 69.00 LG
+11 12 Gama media
+qhqrsa
+1000 89.00 LG
+8 10 Gama media
+mncz
+698 92.00 LG
+5 2 Gama baja
+eaktp
+790 99.00 Motorola
+1 7 Gama media
+fewaw
+123 71.00 Apple
+11 14 Gama media
+lthdb
+220 19.00 LG
+0 6 Gama baja
+qojnib
+624 85.00 Samsung
+10 11 Gama media
+fzbwv
+710 79.00 Nokia
+7 2 Gama baja
+jmqae
+148 76.00 Samsung
+0 6 Gama baja
+zzlbaz
+474 29.00 LG
+15 3 Gama media
+nurid
+816 69.00 Samsung
+8 11 Gama alta
+aegr
+679 71.00 Nokia
+6 4 Gama alta
+itzizc
+725 84.00 Nokia
+16 10 Gama baja
+ibpgxw
+462 86.00 Nokia
+6 14 Gama media
+phllp

@@ -10,7 +10,7 @@ línea almacenará el nombre de la novela.
 b) Abrir el archivo binario y permitir la actualización del mismo. Se debe poder agregar una
 novela y modificar una existente. Las búsquedas se realizan por código de novela.
 
-NOTA: El nombre del archivo binario es proporcionado por el usuario desde el teclado.  
+NOTA: El nombre del archivo binario es proporcionado por el usuario desde el 5rteclado.  
 }
 program Novelas;
 const
